@@ -6,7 +6,7 @@ import { InfoCircleOutlined } from "@ant-design/icons";
 const { Search } = Input;
 import { useSingleUserMessage } from "../../api/api";
 
-function TopberMessage({ senderId, vendorId, setProfilePic }) {
+function TopberMessage({ senderId, vendorId, setProfilePic, setVehicles }) {
   const singleUserParams = {
     sender_id: senderId,
     receiver_id: vendorId,
@@ -20,10 +20,11 @@ function TopberMessage({ senderId, vendorId, setProfilePic }) {
   }, [senderId, vendorId, refetch]);
 
   useEffect(() => {
-    if (singleUserMessage?.data?.profile_pic) {
-      setProfilePic(singleUserMessage.data.profile_pic);
+    if (singleUserMessage?.data) {
+      setProfilePic(singleUserMessage?.data?.profile_pic);
+      setVehicles(singleUserMessage?.data?.vehicles);
     }
-  }, [singleUserMessage, setProfilePic]);
+  }, [singleUserMessage, setProfilePic, setVehicles]);
 
   if (isLoading) {
     return <Spin />;

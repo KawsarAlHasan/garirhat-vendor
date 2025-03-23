@@ -1,13 +1,8 @@
 import React, { useState } from "react";
 import { useMyVehicles } from "../../api/api";
 import { Table, Button, Spin, Input, Avatar } from "antd";
-import {
-  EyeOutlined,
-  EditOutlined,
-  DeleteOutlined,
-  ExclamationCircleOutlined,
-} from "@ant-design/icons";
-import { Link } from "react-router-dom";
+import { EyeOutlined, EditOutlined } from "@ant-design/icons";
+import { Link, useParams } from "react-router-dom";
 import DeleteVehicle from "./DeleteVehicle";
 const { Search } = Input;
 
@@ -138,6 +133,10 @@ function MyVehicles() {
           }}
           style={{ width: 300 }}
         />
+
+        <Link to="/my-vehicles/add-new-vehicle">
+          <Button type="primary">Add New Vehicle</Button>
+        </Link>
       </div>
       <Table
         columns={columns}

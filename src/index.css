@@ -10,3 +10,9 @@ body {
 .react-multiple-carousel__arrow{
   z-index: 10 !important;
 }
+
+
+
+.soldOutcode{
+  background-image: url(https://w7.pngwing.com/pngs/568/351/png-transparent-computer-icons-sold-out-miscellaneous-text-logo.png);
+}

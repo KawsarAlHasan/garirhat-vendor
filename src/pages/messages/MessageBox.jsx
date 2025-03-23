@@ -5,6 +5,7 @@ import axios from "axios";
 import TopberMessage from "./TopberMessage";
 import SendSound from "../../assets/files/notify.mp3";
 import socket from "../../socket";
+import { API } from "../../api/api";
 const { Search } = Input;
 
 function MessageBox({ vendorID }) {
@@ -17,6 +18,7 @@ function MessageBox({ vendorID }) {
   const [newMessage, setNewMessage] = useState("");
 
   const [profilePic, setProfilePic] = useState("");
+  const [vehicles, setVehicles] = useState([]);
 
   const messagesEndRef = useRef(null);
 
@@ -32,10 +34,21 @@ function MessageBox({ vendorID }) {
       )
       .then((response) => setMessages(response.data.data));
 
-    socket.on("receiveMessage", (message) => {
+    socket.on("receiveMessage", async (message) => {
       if (message.sender_id === senderId || message.receiver_id === senderId) {
         setMessages((prev) => [...prev, message]);
         scrollToBottom();
+
+        try {
+          const sendReadData = {
+            sender_id: senderId,
+            receiver_id: vendorId,
+          };
+
+          await API.put("/message/read-message", sendReadData);
+        } catch (error) {
+          console.error(error);
+        }
       }
 
       if (message.sender_id !== vendorId) {
@@ -66,7 +79,7 @@ function MessageBox({ vendorID }) {
         sender_id: vendorId,
         receiver_id: senderId,
         message: value,
-        vehicle_id: 2,
+        vehicle_id: vehicles[0]?.id,
       };
 
       socket.emit("sendMessage", messageData);
@@ -87,6 +100,7 @@ function MessageBox({ vendorID }) {
             senderId={senderId}
             vendorId={vendorId}
             setProfilePic={setProfilePic}
+            setVehicles={setVehicles}
           />
           <div
             className="flex-1 overflow-y-auto p-4 bg-gray-100"

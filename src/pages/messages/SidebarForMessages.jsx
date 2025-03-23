@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { UserOutlined } from "@ant-design/icons";
-import { Avatar, Input, Spin } from "antd";
-import { useMessagesSender } from "../../api/api";
+import { Avatar, Badge, Input, Spin } from "antd";
+import { API, useMessagesSender } from "../../api/api";
 import { Link, useSearchParams } from "react-router-dom";
 import socket from "../../socket";
 
@@ -21,6 +21,7 @@ function SidebarForMessages({ vendorID }) {
 
   useEffect(() => {
     socket.on("receiveMessage", (message) => {
+      console.log("message", message);
       refetch();
     });
 
@@ -33,10 +34,22 @@ function SidebarForMessages({ vendorID }) {
     console.log("value", value);
   };
 
-  const onSenderSelect = (value) => {
+  const onSenderSelect = async (value) => {
     const senderId = "u" + value;
     searchParams.set("sender", senderId);
     setSearchParams(searchParams);
+
+    try {
+      const sendReadData = {
+        sender_id: senderId,
+        receiver_id: vendorId,
+      };
+
+      await API.put("/message/read-message", sendReadData);
+      refetch();
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -83,6 +96,10 @@ function SidebarForMessages({ vendorID }) {
                       {senderList.vehicles[0].make}{" "}
                       {senderList.vehicles[0].model}
                     </h2>
+                  </div>
+
+                  <div className="self-center">
+                    <Badge count={senderList?.unread_count} />
                   </div>
                 </div>
               </div>

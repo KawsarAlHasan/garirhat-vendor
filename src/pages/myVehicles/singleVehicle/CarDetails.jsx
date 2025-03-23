@@ -3,6 +3,7 @@ import Carousel from "react-multi-carousel";
 import CarOverview from "./CarOverview";
 import Features from "./Features";
 import Specifications from "./Specifications";
+import soldOutImage from "../../../assets/garirhat-soldout.png";
 import Loading from "../../../components/Loading";
 import { useSingleVehicle } from "../../../api/vehicleApi";
 import { Link, useParams } from "react-router-dom";
@@ -61,18 +62,63 @@ const CarDetails = () => {
     <div className="max-w-6xl mx-auto">
       <div className=" p-4 grid md:grid-cols-2 gap-6">
         {/* Image Carousel */}
-        <Carousel responsive={responsive} className="h-[370px]">
-          {vehicle.images.map((img, index) => (
-            <Image
-              width="100%"
-              height="370px"
-              className="rounded-lg"
-              key={index}
-              src={img}
-              alt="vehicle_images"
-            />
-          ))}
-        </Carousel>
+        {vehicle.status === "Sold Out" ? (
+          <div className="">
+            <Carousel responsive={responsive} className="h-[370px]">
+              {vehicle.images.map((img, index) => (
+                <Image
+                  key={index}
+                  width="100%"
+                  height="370px"
+                  className="rounded-lg"
+                  src={img}
+                  alt="vehicle_images"
+                />
+              ))}
+            </Carousel>
+
+            <div className=" mt-[-105px] left-0">
+              <Image
+                preview={false}
+                width="129px"
+                height="100px"
+                src={soldOutImage}
+                alt="soldimage"
+              />
+            </div>
+          </div>
+        ) : vehicle.status === "Upcoming" ? (
+          <div className="w-full relative">
+            <p className="text-xl font-semibold absolute right-0 bg-ButtonColor text-white p-3 rounded z-10">
+              Upcoming
+            </p>
+            <Carousel responsive={responsive} className="h-[370px]">
+              {vehicle.images.map((img, index) => (
+                <Image
+                  width="100%"
+                  height="370px"
+                  className="rounded-lg"
+                  key={index}
+                  src={img}
+                  alt="vehicle_images"
+                />
+              ))}
+            </Carousel>
+          </div>
+        ) : (
+          <Carousel responsive={responsive} className="h-[370px]">
+            {vehicle.images.map((img, index) => (
+              <Image
+                width="100%"
+                height="370px"
+                className="rounded-lg"
+                key={index}
+                src={img}
+                alt="vehicle_images"
+              />
+            ))}
+          </Carousel>
+        )}
 
         {/* Car Details */}
         <div>
@@ -92,7 +138,7 @@ const CarDetails = () => {
           </p>
           <div className="mt-4 space-y-2 text-gray-700">
             <p>
-              <strong>Vehicle Code:</strong> {vehicle.vehicle_code}
+              <strong>Stock Number:</strong> {vehicle.vehicle_code}
             </p>
             <p>
               <strong>Location:</strong> {vehicle.city && `${vehicle.city},`}
@@ -119,7 +165,9 @@ const CarDetails = () => {
 
             <div>
               <strong>Status: </strong>
-              {vehicle.status === "Active" || vehicle.status === "Upcoming" ? (
+              {vehicle.status === "Active" ||
+              vehicle.status === "Sold Out" ||
+              vehicle.status === "Upcoming" ? (
                 <Select
                   value={status}
                   onChange={handleStatusChange}

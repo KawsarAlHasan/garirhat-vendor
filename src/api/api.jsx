@@ -13,6 +13,12 @@ API.interceptors.request.use((config) => {
   return config;
 });
 
+// sign out
+export const signOutVendor = () => {
+  localStorage.removeItem("token");
+  window.location.href = "/login";
+};
+
 // get all vehicles
 export const useMyVehicles = ({
   page = 1,
@@ -148,8 +154,12 @@ export const usePriceReason = () => {
 
 export const useVendorProfile = () => {
   const getVendorProfile = async () => {
-    const response = await API.get("/vendor/me");
-    return response.data;
+    try {
+      const response = await API.get("/vendor/me");
+      return response.data;
+    } catch (error) {
+      return error.response.data;
+    }
   };
 
   const {

@@ -1,11 +1,16 @@
 import { Navigate, useLocation } from "react-router-dom";
+import { useVendorProfile } from "../api/api";
+import { Spin } from "antd";
 
 const PrivateRoute = ({ children }) => {
-
   const location = useLocation();
-  const token = localStorage.getItem("token");
+  const { vendorProfile, isLoading } = useVendorProfile();
 
-  if (!token) {
+  if (isLoading) {
+    return <Spin />;
+  }
+
+  if (!vendorProfile.id) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 

@@ -3,11 +3,11 @@ import { Modal, Input, Form, Button, message, Upload } from "antd";
 import { useState, useEffect } from "react";
 import { API } from "../../api/api";
 
-const UpdateProfile = ({ vendorProfile }) => {
+const UpdateProfile = ({ vendorProfile, refetch }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({});
   const [profileImage, setProfileImage] = useState([]);
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (vendorProfile) {
@@ -45,27 +45,21 @@ const UpdateProfile = ({ vendorProfile }) => {
   };
 
   // Save Profile
-  const handleSaveProfile = async() => {
+  const handleSaveProfile = async () => {
+    try {
+      setLoading(true);
+      const response = await API.put("/vendor/update", formData);
+      if (response.status == 201) {
+        message.success("Vendor Profile Update Successfully");
+      }
 
-        try {
-          setLoading(true);
-          const response = await API.put("/vendor/update", formData);
-          if (response.status == 201) {
-            message.success("Vendor Profile Update Successfully");
-          }
-    
-          console.log("response", response);
-          // refetch();
-          setLoading(false);
-          setIsModalOpen(false);
-        } catch (error) {
-          console.error(error);
-          message.error("Something went wrong");
-          setLoading(false);
-        }
-
-
-    setIsModalOpen(false);
+      refetch();
+      setLoading(false);
+      setIsModalOpen(false);
+    } catch (error) {
+      message.error("Something went wrong");
+      setLoading(false);
+    }
   };
 
   return (
@@ -144,8 +138,8 @@ const UpdateProfile = ({ vendorProfile }) => {
           </Form.Item>
           <Form.Item label="Business License">
             <Input
-              name="business_license"
-              value={formData.business_license || ""}
+              name="business_lisence"
+              value={formData.business_lisence || ""}
               onChange={handleChange}
             />
           </Form.Item>

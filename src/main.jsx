@@ -8,7 +8,6 @@ import AuthProvider from "./authprovider/AuthProvider.jsx";
 import "react-multi-carousel/lib/styles.css";
 import "antd/dist/reset.css";
 import socket from "./socket.js";
-// import "antd/dist/antd.css";
 
 const queryClient = new QueryClient();
 

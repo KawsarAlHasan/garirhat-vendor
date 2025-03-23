@@ -1,15 +1,19 @@
-import { Card, Button, Rate, Tag, Image } from "antd";
-import { CheckCircleOutlined, UserOutlined } from "@ant-design/icons";
-import { useState } from "react";
-
+import { Card, Rate, Tag, Avatar, Spin } from "antd";
+import {
+  CheckCircleOutlined,
+  UserOutlined,
+  CloseCircleOutlined,
+} from "@ant-design/icons";
 import { useVendorProfile } from "../../api/api";
 import UpdateProfile from "./UpdateProfile";
+import NidCardVerify from "./NidCardVerify";
 
 const UserProfile = () => {
-  const [error, setError] = useState(false);
-  const { vendorProfile } = useVendorProfile();
+  const { vendorProfile, isLoading, refetch } = useVendorProfile();
 
-  console.log("vendorProfile", vendorProfile);
+  if (isLoading) {
+    return <Spin />;
+  }
 
   return (
     <div className="flex justify-center items-center font-MyStyle">
@@ -17,21 +21,13 @@ const UserProfile = () => {
         {/* Header Section */}
         <div className="flex flex-col md:flex-row items-center md:items-start p-4">
           {/* Profile Picture */}
+
           <div className="flex items-center">
-            {error || !vendorProfile.profile_picture ? (
-              <div className="w-[80px] h-[80px] flex items-center justify-center rounded-full bg-gray-200">
-                <UserOutlined className="text-3xl text-gray-500" />
-              </div>
-            ) : (
-              <Image
-                width={80}
-                height={80}
-                src={vendorProfile.profile_picture}
-                alt="Profile Photo"
-                className="rounded-full"
-                onError={() => setError(true)}
-              />
-            )}
+            <Avatar
+              className="w-[80px] h-[80px]"
+              icon={!vendorProfile.profile_picture ? <UserOutlined /> : null}
+              src={vendorProfile.profile_picture || undefined}
+            />
           </div>
 
           <div className="flex-1 ml-4">
@@ -46,17 +42,21 @@ const UserProfile = () => {
               <h2 className="font-bold text-amber-700 text-2xl">4.5/5</h2>
             </div>
             <div className="flex gap-2 mt-2">
-              {/* <Button icon={<EditOutlined />} size="small" onClick={handleEditProfile}>
-                Edit Profile
-              </Button> */}
-              <UpdateProfile vendorProfile={vendorProfile} />
-              <Button
-                type="primary"
-                icon={<CheckCircleOutlined />}
-                size="small"
+              <UpdateProfile vendorProfile={vendorProfile} refetch={refetch} />
+              <Tag
+                color={
+                  vendorProfile.verify_status == "Verified" ? "green" : "red"
+                }
+                icon={
+                  vendorProfile.verify_status == "Verified" ? (
+                    <CheckCircleOutlined />
+                  ) : (
+                    <CloseCircleOutlined />
+                  )
+                }
               >
-                {vendorProfile.verify_status || "Verified"}
-              </Button>
+                {vendorProfile.verify_status}
+              </Tag>
             </div>
           </div>
         </div>
@@ -92,39 +92,13 @@ const UserProfile = () => {
             </p>
             <p>
               <strong>Business License:</strong>{" "}
-              {vendorProfile.business_license}
+              {vendorProfile.business_lisence}
             </p>
           </div>
         </div>
 
         {/* NID & Documents Section */}
-        <div className="p-4">
-          <h3 className="text-lg font-semibold">Identification & Documents</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
-            <div>
-              <p>
-                <strong>NID Card (Front):</strong>
-              </p>
-              <Image
-                width={180}
-                src={vendorProfile.nid_card_front}
-                alt="NID Front"
-                className="rounded-lg"
-              />
-            </div>
-            <div>
-              <p>
-                <strong>NID Card (Back):</strong>
-              </p>
-              <Image
-                width={180}
-                src={vendorProfile.nid_card_back}
-                alt="NID Back"
-                className="rounded-lg"
-              />
-            </div>
-          </div>
-        </div>
+        <NidCardVerify vendorProfile={vendorProfile} refetch={refetch} />
       </Card>
     </div>
   );

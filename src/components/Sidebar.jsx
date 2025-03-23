@@ -4,15 +4,19 @@ import {
   AppstoreOutlined,
   CarOutlined,
   MessageOutlined,
-  PlusSquareFilled,
   UserOutlined,
 } from "@ant-design/icons";
+
 import { Link } from "react-router-dom";
 import { CiLogout } from "react-icons/ci";
-import { useVendorProfile } from "../api/api";
+import { signOutVendor, useVendorProfile } from "../api/api";
 
 const Sidebar = ({ onClick }) => {
   const { vendorProfile, isLoading } = useVendorProfile();
+
+  const handleSignOut = () => {
+    signOutVendor();
+  };
 
   const sidebarItems = [
     {
@@ -20,11 +24,7 @@ const Sidebar = ({ onClick }) => {
       icon: <AppstoreOutlined />,
       label: <Link to="/">Dashboard</Link>,
     },
-    {
-      key: "2",
-      icon: <PlusSquareFilled />,
-      label: <Link to="/add-my-car">Add My Car</Link>,
-    },
+
     {
       key: "3",
       icon: <CarOutlined />,
@@ -51,7 +51,7 @@ const Sidebar = ({ onClick }) => {
     {
       key: "6",
       icon: <CiLogout />,
-      label: <Link to="/user-profile">LogOut</Link>,
+      label: <div onClick={handleSignOut}>Logout</div>,
     },
   ];
 

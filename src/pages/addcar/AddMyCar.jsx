@@ -44,6 +44,7 @@ const AddMyCar = () => {
   const [prices, setPrices] = useState([]);
   const [thumbnailImage, setThumbnailImage] = useState(null);
   const [images, setImages] = useState([]);
+  const [fasebookPost, setFacebookPost] = useState(false);
 
   const [form] = Form.useForm();
   const { alLocation } = useAlLocation(); //all divition with distict with Upozila
@@ -105,6 +106,10 @@ const AddMyCar = () => {
     setImages(files);
   };
 
+  const handleFacebookPost = (value) => {
+    setFacebookPost(value);
+  };
+
   // input all data
   const onFinish = async (values) => {
     const formData = new FormData();
@@ -113,6 +118,7 @@ const AddMyCar = () => {
     formData.append("division", divitionName);
     formData.append("district", distictName);
     formData.append("upzila", upazilaName);
+    formData.append("is_post_fb_req", fasebookPost);
 
     if (thumbnailImage) {
       formData.append("thumbnail_image", thumbnailImage);
@@ -163,7 +169,7 @@ const AddMyCar = () => {
     <div className="mx-auto bg-white p-6">
       <h2 className="text-3xl font-semibold mb-4 flex items-center justify-center gap-2 font-MyStyle">
         <CarOutlined />
-        Sell your car with GarirHat – get the best deal, fast and hassle-free! 
+        Sell your car with GarirHat – get the best deal, fast and hassle-free!
       </h2>
       <Form form={form} layout="vertical" onFinish={onFinish}>
         <div className="grid lg:grid-cols-2 gap-x-4">
@@ -511,6 +517,7 @@ const AddMyCar = () => {
         <VehicleImages
           onThumbnailImageChange={handleThumbnailImage}
           onImagesChange={handleImages}
+          onFacebookPost={handleFacebookPost}
         />
 
         <Form.Item>
