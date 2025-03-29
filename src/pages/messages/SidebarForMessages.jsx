@@ -9,15 +9,14 @@ const { Search } = Input;
 
 function SidebarForMessages({ vendorID }) {
   const [searchParams, setSearchParams] = useSearchParams();
-  const vendorId = "v" + vendorID;
 
   const { messageSenderList, isLoading, isError, error, refetch } =
-    useMessagesSender(vendorId);
+    useMessagesSender(vendorID);
 
   // Connect user to socket server
   useEffect(() => {
-    socket.emit("userConnected", vendorId); // Notify server of user connection
-  }, [vendorId]);
+    socket.emit("userConnected", vendorID); // Notify server of user connection
+  }, [vendorID]);
 
   useEffect(() => {
     socket.on("receiveMessage", (message) => {
@@ -42,7 +41,7 @@ function SidebarForMessages({ vendorID }) {
     try {
       const sendReadData = {
         sender_id: senderId,
-        receiver_id: vendorId,
+        receiver_id: vendorID,
       };
 
       await API.put("/message/read-message", sendReadData);
@@ -52,60 +51,64 @@ function SidebarForMessages({ vendorID }) {
     }
   };
 
+  // console.log(messageSenderList, "messageSenderList");
+
   return (
-    <div className=" bg-white border-r">
-      <Link to={`/messages/${vendorID}`} className="text-lg font-semibold">
-        Chat
-      </Link>
-      <Search
-        placeholder="Search sender.."
-        onSearch={onSearch}
-        className="mb-2"
-      />
+    <div>
+      <div className=" bg-white border-r">
+        <Link to={`/messages/${vendorID}`} className="text-lg font-semibold">
+          Chat
+        </Link>
+        <Search
+          placeholder="Search sender.."
+          onSearch={onSearch}
+          className="mb-2"
+        />
 
-      <div className="h-[70vh] overflow-y-auto border rounded p-2">
-        {isLoading ? (
-          <Spin />
-        ) : (
-          messageSenderList?.users?.map((senderList, i) => (
-            <div
-              key={i}
-              onClick={() => onSenderSelect(senderList.id)}
-              className="mt-2 bg-gray-300 p-2 rounded cursor-pointer hover:bg-gray-400 transition"
-            >
-              <div className="flex w-full">
-                <div className="self-center mr-2 relative">
-                  <Avatar
-                    size="large"
-                    icon={!senderList.profile_pic ? <UserOutlined /> : null}
-                    src={senderList.profile_pic || undefined}
-                  />
+        <div className="h-[70vh] overflow-y-auto border rounded p-2">
+          {isLoading ? (
+            <Spin />
+          ) : (
+            messageSenderList?.users?.map((senderList, i) => (
+              <div
+                key={i}
+                onClick={() => onSenderSelect(senderList.id)}
+                className="mt-2 bg-gray-300 p-2 rounded cursor-pointer hover:bg-gray-400 transition"
+              >
+                <div className="flex w-full">
+                  <div className="self-center mr-2 relative">
+                    <Avatar
+                      size="large"
+                      icon={!senderList?.profile_pic ? <UserOutlined /> : null}
+                      src={senderList?.profile_pic || undefined}
+                    />
 
-                  <span
-                    className={`absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-white ${
-                      senderList.is_active ? "bg-green-500" : "bg-gray-400"
-                    }`}
-                  ></span>
-                </div>
-
-                <div className="flex justify-between w-full">
-                  <div>
-                    <h1 className="font-medium">{senderList.name}</h1>
-                    <h2 className="text-sm text-gray-600">
-                      ({senderList.vehicles[0].vehicle_code}){" "}
-                      {senderList.vehicles[0].make}{" "}
-                      {senderList.vehicles[0].model}
-                    </h2>
+                    <span
+                      className={`absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-white ${
+                        senderList?.is_active ? "bg-green-500" : "bg-gray-400"
+                      }`}
+                    ></span>
                   </div>
 
-                  <div className="self-center">
-                    <Badge count={senderList?.unread_count} />
+                  <div className="flex justify-between w-full">
+                    <div>
+                      <h1 className="font-medium">{senderList?.name}</h1>
+                      <h2 className="text-sm text-gray-600">
+                        {new Date(
+                          senderList?.last_message_time
+                        ).toLocaleString()}
+                      </h2>
+                    </div>
+
+                    <div className="self-center">
+                      <Badge count={senderList?.unread_count} />
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ))
-        )}
+            ))
+          )}
+        </div>
       </div>
     </div>
   );

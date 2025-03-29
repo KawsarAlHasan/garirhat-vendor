@@ -30,18 +30,7 @@ function TopberMessage({ senderId, vendorId, setProfilePic, setVehicles }) {
     return <Spin />;
   }
 
-  const {
-    email,
-    id,
-    is_active,
-    name,
-    phone,
-    profile_pic,
-    sign_up_method,
-    status,
-    uid,
-    vehicles,
-  } = singleUserMessage?.data;
+  const { is_active, name, profile_pic, vehicles } = singleUserMessage?.data;
 
   return (
     <div className="mt-2 bg-gray-300 p-2 rounded">
