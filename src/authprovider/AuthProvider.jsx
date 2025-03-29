@@ -37,7 +37,6 @@ const AuthProvider = ({ children }) => {
         window.location.href = "/";
       }
     } catch (error) {
-      console.error("Error:", error.message);
       message.error("Something went wrong Please check this");
     } finally {
       setLoading(false);

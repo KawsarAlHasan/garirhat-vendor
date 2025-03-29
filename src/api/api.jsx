@@ -176,6 +176,30 @@ export const useVendorProfile = () => {
   return { vendorProfile, isLoading, isError, error, refetch };
 };
 
+export const useMyProfile = () => {
+  const getVendorMyProfile = async () => {
+    try {
+      const response = await API.get("/vendor/my-profile");
+      return response.data;
+    } catch (error) {
+      return error.response.data;
+    }
+  };
+
+  const {
+    data: myProfile = [],
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useQuery({
+    queryKey: ["myProfile"],
+    queryFn: getVendorMyProfile,
+  });
+
+  return { myProfile, isLoading, isError, error, refetch };
+};
+
 export const useMessages = ({ sender_id, receiver_id } = {}) => {
   const getMessage = async () => {
     const response = await API.get("/message", {
@@ -198,9 +222,10 @@ export const useMessages = ({ sender_id, receiver_id } = {}) => {
   return { senderMessages, isLoading, isError, error, refetch };
 };
 
-export const useMessagesSender = (vendorId) => {
+export const useMessagesSender = (vendorID) => {
   const getMessageSenderList = async () => {
-    const response = await API.get(`/message/sender/${vendorId}`);
+    const response = await API.get(`/message/sender/${vendorID}`);
+
     return response.data;
   };
   const {
@@ -210,7 +235,7 @@ export const useMessagesSender = (vendorId) => {
     error,
     refetch,
   } = useQuery({
-    queryKey: ["messageSenderList", vendorId],
+    queryKey: ["messageSenderList", vendorID],
     queryFn: getMessageSenderList,
   });
   return { messageSenderList, isLoading, isError, error, refetch };
@@ -236,4 +261,22 @@ export const useSingleUserMessage = ({ sender_id, receiver_id } = {}) => {
   });
 
   return { singleUserMessage, isLoading, isError, error, refetch };
+};
+
+export const useVendorsEmployee = (vendorId) => {
+  const getVendorsEmployee = async () => {
+    const response = await API.get(`vendor-employees/all`);
+    return response.data;
+  };
+  const {
+    data: vendorsEmployee = [],
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useQuery({
+    queryKey: ["vendorsEmployee", vendorId],
+    queryFn: getVendorsEmployee,
+  });
+  return { vendorsEmployee, isLoading, isError, error, refetch };
 };

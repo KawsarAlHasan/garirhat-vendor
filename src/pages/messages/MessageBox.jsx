@@ -12,7 +12,6 @@ function MessageBox({ vendorID }) {
   const location = useLocation();
   const params = new URLSearchParams(location.search);
   const senderId = params.get("sender");
-  const vendorId = "v" + vendorID;
 
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
@@ -24,13 +23,13 @@ function MessageBox({ vendorID }) {
 
   // Connect user to socket server
   useEffect(() => {
-    socket.emit("userConnected", vendorId); // Notify server of user connection
-  }, [vendorId]);
+    socket.emit("userConnected", vendorID); // Notify server of user connection
+  }, [vendorID]);
 
   useEffect(() => {
     axios
       .get(
-        `https://api.garirhat.com/api/v1/message/?sender_id=${vendorId}&receiver_id=${senderId}`
+        `https://api.garirhat.com/api/v1/message/?sender_id=${vendorID}&receiver_id=${senderId}`
       )
       .then((response) => setMessages(response.data.data));
 
@@ -42,7 +41,7 @@ function MessageBox({ vendorID }) {
         try {
           const sendReadData = {
             sender_id: senderId,
-            receiver_id: vendorId,
+            receiver_id: vendorID,
           };
 
           await API.put("/message/read-message", sendReadData);
@@ -51,7 +50,7 @@ function MessageBox({ vendorID }) {
         }
       }
 
-      if (message.sender_id !== vendorId) {
+      if (message.sender_id !== vendorID) {
         const audio = new Audio(SendSound);
         audio
           .play()
@@ -62,7 +61,7 @@ function MessageBox({ vendorID }) {
     return () => {
       socket.off("receiveMessage");
     };
-  }, [vendorId, senderId]);
+  }, [vendorID, senderId]);
 
   const scrollToBottom = () => {
     setTimeout(() => {
@@ -76,7 +75,7 @@ function MessageBox({ vendorID }) {
   const onSend = (value) => {
     if (value.trim()) {
       const messageData = {
-        sender_id: vendorId,
+        sender_id: vendorID,
         receiver_id: senderId,
         message: value,
         vehicle_id: vehicles[0]?.id,
@@ -98,7 +97,7 @@ function MessageBox({ vendorID }) {
         <div className="flex flex-col h-full">
           <TopberMessage
             senderId={senderId}
-            vendorId={vendorId}
+            vendorId={vendorID}
             setProfilePic={setProfilePic}
             setVehicles={setVehicles}
           />
@@ -110,15 +109,15 @@ function MessageBox({ vendorID }) {
               <div
                 key={index}
                 className={`flex items-end mb-3 ${
-                  msg.sender_id === vendorId ? "justify-end" : "justify-start"
+                  msg.sender_id === vendorID ? "justify-end" : "justify-start"
                 }`}
               >
-                {msg.sender_id !== vendorId && (
+                {msg.sender_id !== vendorID && (
                   <Avatar src={profilePic} className="mr-2" />
                 )}
                 <div
                   className={`px-4 py-2 rounded-lg max-w-xs ${
-                    msg.sender_id === vendorId
+                    msg.sender_id === vendorID
                       ? "bg-blue-500 text-white rounded-br-none"
                       : "bg-white text-gray-800 rounded-bl-none shadow"
                   }`}

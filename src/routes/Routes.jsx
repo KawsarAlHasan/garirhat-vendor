@@ -11,6 +11,9 @@ import MyVehicles from "../pages/myVehicles/MyVehicles";
 import EditVehicle from "../pages/myVehicles/editVehicle/EditVehicle";
 import Messages from "../pages/messages/Messages";
 import PrivateRoute from "./PrivateRoute";
+import EmployeeManagement from "../pages/employeeManagement/EmployeeManagement";
+import EmployeeDetails from "../pages/employeeManagement/EmployeeDetails";
+import AddNewEmployee from "../pages/employeeManagement/AddNewEmployee";
 
 export const routes = createBrowserRouter([
   {
@@ -58,6 +61,18 @@ export const routes = createBrowserRouter([
       {
         path: "/messages/:vendorID",
         element: <Messages />,
+      },
+      {
+        path: "/employee-management",
+        element: <EmployeeManagement />,
+      },
+      {
+        path: "/employee-management/add-new-employee",
+        element: <AddNewEmployee />,
+      },
+      {
+        path: "/employee-management/:employeeID",
+        element: <EmployeeDetails />,
       },
       {
         path: "/test",
