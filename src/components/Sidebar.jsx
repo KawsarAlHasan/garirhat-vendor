@@ -5,6 +5,7 @@ import {
   CarOutlined,
   MessageOutlined,
   UserOutlined,
+  UsergroupAddOutlined,
 } from "@ant-design/icons";
 
 import { Link } from "react-router-dom";
@@ -50,6 +51,16 @@ const Sidebar = ({ onClick }) => {
     },
     {
       key: "6",
+      icon: <UsergroupAddOutlined />,
+      label: <Link to="/employee-management">Employee Management</Link>,
+    },
+    {
+      key: "7",
+      icon: <UsergroupAddOutlined />,
+      label: <Link to="/employee-management">Employee Management</Link>,
+    },
+    {
+      key: "8",
       icon: <CiLogout />,
       label: <div onClick={handleSignOut}>Logout</div>,
     },
